@@ -18,10 +18,10 @@ const invalidTypes = [
 ]
 
 test('qrcodeImage', (t) => {
-  const qr = qrcodeImage('Hello world')
+  const qr = qrcodeImage('hello world')
 
   t.assert(qr instanceof Uint8ClampedArray)
-  t.deepEqual(qr, qrcodeImage('Hello world'))
+  t.deepEqual(qr, qrcodeImage('hello world'))
   t.notDeepEqual(qr, qrcodeImage('Goodbye Earth!'))
   t.deepEqual(Buffer.from(qr), readFileSync(join(fixtures, 'hello_world.png')))
 })
