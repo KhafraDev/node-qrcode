@@ -1,11 +1,6 @@
 import test from 'ava'
 
 import { qrcodeUnicode } from '../index.js'
-import { readFileSync } from 'fs'
-import { join } from 'path'
-import { fileURLToPath } from 'url'
-
-const fixtures = join(fileURLToPath(import.meta.url), '..', 'fixtures')
 
 const invalidTypes = [
 	null,
@@ -21,7 +16,6 @@ test('qrcodeUnicode', (t) => {
 	const qr = qrcodeUnicode('hello world')
 
 	t.assert(typeof qr === 'string')
-	// t.is(qr, readFileSync(join(fixtures, 'unicode.txt'), 'utf8'))
 })
 
 test('qrcodeUnicode - Bad arguments', (t) => {

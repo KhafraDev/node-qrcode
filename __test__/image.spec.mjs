@@ -4,7 +4,6 @@ import { qrcodeImage } from '../index.js'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 import { fileURLToPath } from 'url'
-import { isUint8ClampedArray } from 'util/types'
 
 const fixtures = join(fileURLToPath(import.meta.url), '..', 'fixtures')
 
@@ -21,7 +20,7 @@ const invalidTypes = [
 test('qrcodeImage', (t) => {
   const qr = qrcodeImage('Hello world')
 
-  t.assert(isUint8ClampedArray(qr))
+  t.assert(qr instanceof Uint8ClampedArray)
   t.deepEqual(qr, qrcodeImage('Hello world'))
   t.notDeepEqual(qr, qrcodeImage('Goodbye Earth!'))
   t.deepEqual(Buffer.from(qr), readFileSync(join(fixtures, 'hello_world.png')))
