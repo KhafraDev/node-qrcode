@@ -42,11 +42,22 @@ console.log(qrcodeUnicode('text here'))
 
 # Benchmarks
 
-Run [bench.mjs](./bench.mjs). There are too many options so the output gets cut-off.
-1. unicode generation is the fastest (out of all libraries) - ~3k ops/s
-2. svg generation - ~2.7k ops/s
-3. png generation - ~1.7k ops/s
+```
+Running "Generate QR codes" suite...
+Progress: 100%
 
-*Note*: If you only need to create PNGs, use [magic-qr-code](https://www.npmjs.com/package/magic-qr-code) instead - it uses a faster rust crate.
+  @khaf/qrcode image:
+    2 012 ops/s, ±1.65%   | slowest, 32.93% slower
 
-Svg and Unicode QRCode generations are both faster in this package, but were not benchmarked.
+  @khaf/qrcode svg:
+    2 850 ops/s, ±0.67%   | 5% slower
+
+  @khaf/qrcode unicode:
+    3 000 ops/s, ±0.48%   | fastest
+
+Finished 3 cases!
+  Fastest: @khaf/qrcode unicode
+  Slowest: @khaf/qrcode image
+```
+
+*Note*: If you only need the raw data, use [magic-qr-code](https://www.npmjs.com/package/magic-qr-code) instead.

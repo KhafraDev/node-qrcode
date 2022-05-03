@@ -24,7 +24,9 @@ pub fn qrcode_image(text: String) -> Result<Uint8ClampedArray, Error> {
   let code = QrCode::new(text)
     .expect("unable to create a qrcode");
 
-  let image = code.render::<Luma<u8>>().build();
+  let image = code.render::<Luma<u8>>()
+    .quiet_zone(false)
+    .build();
   let dynamic = DynamicImage::from(DynamicImage::ImageLuma8(image));
   let mut buffer: Vec<u8> = Vec::new();
   
@@ -47,6 +49,7 @@ pub fn qrcode_svg(text: String, options: Option<SvgOptions>) -> Result<String, E
       .min_dimensions(200, 200)
       .dark_color(svg::Color("#000"))
       .light_color(svg::Color("#fff"))
+      .quiet_zone(false)
       .build();
 
     return Ok(image)
@@ -62,6 +65,7 @@ pub fn qrcode_svg(text: String, options: Option<SvgOptions>) -> Result<String, E
     .min_dimensions(min_width, min_height)
     .dark_color(svg::Color(dark_color))
     .light_color(svg::Color(light_color))
+    .quiet_zone(false)
     .build();
 
   Ok(image)
@@ -77,6 +81,7 @@ pub fn qrcode_unicode(text: String) -> Result<String, Error> {
   let image = code.render::<unicode::Dense1x2>()
     .dark_color(unicode::Dense1x2::Dark)
     .light_color(unicode::Dense1x2::Light)
+    .quiet_zone(false)
     .build();
 
   Ok(image)
