@@ -10,8 +10,8 @@ crate-type = ["cdylib"]
 # Default enable napi4 feature, see https://nodejs.org/api/n-api.html#node-api-version-matrix
 napi = { version = "2.2.0", default-features = false, features = ["napi4"] }
 napi-derive = "2.2.0"
-qrcode = "0.12.0"
 qrcode-png = "0.4.0"
+qrcodegen = "1.8.0"
 
 [build-dependencies]
 napi-build = "1.2.1"

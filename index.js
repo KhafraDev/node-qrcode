@@ -236,8 +236,8 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { qrcodeImage, qrcodeSvg, qrcodeUnicode } = nativeBinding
+const { qrcodeImage, qrcodeUnicode, qrcodeSvg } = nativeBinding
 
 module.exports.qrcodeImage = qrcodeImage
-module.exports.qrcodeSvg = qrcodeSvg
 module.exports.qrcodeUnicode = qrcodeUnicode
+module.exports.qrcodeSvg = qrcodeSvg

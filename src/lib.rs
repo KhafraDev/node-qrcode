@@ -2,18 +2,11 @@
 
 #[macro_use]
 extern crate napi_derive;
+extern crate qrcodegen;
 
+use qrcodegen::{QrCode as QrCode3, QrCodeEcc as QrCodeEcc2};
 use napi::{Error, bindgen_prelude::Uint8ClampedArray};
-use qrcode::{QrCode, render::{svg, unicode}};
 use qrcode_png::{QrCode as QrCode2, QrCodeEcc, Color};
-
-#[napi(object)]
-pub struct SvgOptions {
-  pub min_width: Option<u32>,
-  pub min_height: Option<u32>,
-  pub dark_color: Option<&'static str>,
-  pub light_color: Option<&'static str>
-}
 
 #[napi]
 pub fn qrcode_image(text: String) -> Result<Uint8ClampedArray, Error> {
@@ -21,7 +14,8 @@ pub fn qrcode_image(text: String) -> Result<Uint8ClampedArray, Error> {
     return Err(Error::from_reason("text length must be greater than 0".to_string()));
   }
 
-  let mut qrcode = QrCode2::new(text, QrCodeEcc::Medium).unwrap();
+  let mut qrcode = QrCode2::new(text, QrCodeEcc::Medium)
+    .expect("unable to create a qrcode");
 
   qrcode.margin(10);
   qrcode.zoom(10);
@@ -33,52 +27,62 @@ pub fn qrcode_image(text: String) -> Result<Uint8ClampedArray, Error> {
 }
 
 #[napi]
-pub fn qrcode_svg(text: String, options: Option<SvgOptions>) -> Result<String, Error> {
+pub fn qrcode_unicode(text: String) -> Result<String, Error> {
   if text.is_empty() {
     return Err(Error::from_reason("text length must be greater than 0".to_string()));
   }
 
-  let code = QrCode::new(text).expect("unable to create a qrcode");
+  let qr = QrCode3::encode_text(&text,QrCodeEcc2::Medium)
+    .expect("unable to create a qrcode");
 
-  if options.is_none() {
-    let image = code.render::<svg::Color>()
-      .min_dimensions(200, 200)
-      .dark_color(svg::Color("#000"))
-      .light_color(svg::Color("#fff"))
-      .quiet_zone(false)
-      .build();
+  let mut result = String::new();
 
-    return Ok(image)
+  for y in 0..qr.size() {
+    for x in 0..qr.size() {
+      if qr.get_module(x, y) {
+        result += "██";
+      } else {
+        result += "  ";
+      }
+    }
+   
+    result += "\n";
   }
 
-  let svg_options = options.unwrap();
-  let min_width = svg_options.min_width.unwrap_or(200);
-  let min_height = svg_options.min_height.unwrap_or(200);
-  let dark_color = svg_options.dark_color.unwrap_or("#000");
-  let light_color = svg_options.light_color.unwrap_or("#fff");
-
-  let image = code.render::<svg::Color>()
-    .min_dimensions(min_width, min_height)
-    .dark_color(svg::Color(dark_color))
-    .light_color(svg::Color(light_color))
-    .quiet_zone(false)
-    .build();
-
-  Ok(image)
+  Ok(result.trim_end().to_string())
 }
 
 #[napi]
-pub fn qrcode_unicode(text: String) -> Result<String, Error> {
+pub fn qrcode_svg(text: String) -> Result<String, Error> {
   if text.is_empty() {
-    return Err(Error::from_reason("text length must be greater than 0".to_string()))
+    return Err(Error::from_reason("text length must be greater than 0".to_string()));
   }
 
-  let code = QrCode::new(text).expect("unable to create a qrcode");
-  let image = code.render::<unicode::Dense1x2>()
-    .dark_color(unicode::Dense1x2::Dark)
-    .light_color(unicode::Dense1x2::Light)
-    .quiet_zone(false)
-    .build();
+  let qr = QrCode3::encode_text(&text,QrCodeEcc2::Medium)
+    .expect("unable to create a qrcode");
+	let mut result = String::new();
+  let dimension = qr.size();
 
-  Ok(image)
+	result += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+	result += "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n";
+	result += &format!(
+		"<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" viewBox=\"0 0 {0} {0}\" stroke=\"none\">\n", dimension * 2);
+	result += "<rect width=\"100%\" height=\"100%\" fill=\"#FFFFFF\"/>\n";
+	result += "<path d=\"";
+
+	for y in 0..qr.size() {
+		for x in 0..qr.size() {
+			if qr.get_module(x, y) {
+				if x != 0 || y != 0 {
+					result += " ";
+				}
+				result += &format!("M{},{}h1v1h-1z", x, y);
+			}
+		}
+	}
+
+	result += "\" fill=\"#000000\"/>\n";
+	result += "</svg>\n";
+
+  Ok(result)
 }

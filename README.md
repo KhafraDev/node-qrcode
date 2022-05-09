@@ -8,19 +8,16 @@ See the [types](./index.d.ts)
 
 ## PNG
 
+*Note*: `qrcodeImage` returns a Uint8ClampedArray!
+
 ```js
 import { qrcodeImage } from '@khaf/qrcode'
 import { writeFileSync } from 'node:fs'
 
-writeFileSync(
-	'./qrcode.png',
-	qrcodeImage('text here') // returns a Uint8ClampedArray
-)
+writeFileSync('./qrcode.png', qrcodeImage('text here'))
 ```
 
 ## SVG
-
-*Note*: options are not included in this example.
 
 ```js
 import { qrcodeSvg } from '@khaf/qrcode'
@@ -47,17 +44,17 @@ Running "Generate QR codes" suite...
 Progress: 100%
 
   @khaf/qrcode image:
-    6 618 ops/s, ±0.14%   | fastest
+    6 606 ops/s, ±0.91%    | slowest, 52.8% slower
 
   @khaf/qrcode svg:
-    2 785 ops/s, ±1.46%   | slowest, 57.92% slower
+    11 969 ops/s, ±0.90%   | 14.48% slower
 
   @khaf/qrcode unicode:
-    2 919 ops/s, ±2.76%   | 55.89% slower
+    13 995 ops/s, ±1.54%   | fastest
 
 Finished 3 cases!
-  Fastest: @khaf/qrcode image
-  Slowest: @khaf/qrcode svg
+  Fastest: @khaf/qrcode unicode
+  Slowest: @khaf/qrcode image
 ```
 
 *Note*: If you only need the raw data, use [magic-qr-code](https://www.npmjs.com/package/magic-qr-code) instead.
