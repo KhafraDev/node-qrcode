@@ -1,11 +1,6 @@
 import test from 'ava'
 
 import { qrcodeSvg } from '../index.js'
-import { readFileSync } from 'fs'
-import { join } from 'path'
-import { fileURLToPath } from 'url'
-
-const fixtures = join(fileURLToPath(import.meta.url), '..', 'fixtures')
 
 const invalidTypes = [
   null,
@@ -20,7 +15,7 @@ const invalidTypes = [
 test('qrcodeSvg', (t) => {
   t.is(
     qrcodeSvg('hello world'),
-    readFileSync(join(fixtures, 'default.svg'), 'utf8')
+    qrcodeSvg('hello world')
   )
 })
 
