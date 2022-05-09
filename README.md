@@ -1,6 +1,6 @@
 # @khaf/qrcode
 
-A wrapper for the [qrcode](https://crates.io/crates/qrcode/0.12.0) crate.
+Native bindings to create QR-codes in a variety of formats!
 
 # API
 
@@ -47,17 +47,17 @@ Running "Generate QR codes" suite...
 Progress: 100%
 
   @khaf/qrcode image:
-    2 012 ops/s, ±1.65%   | slowest, 32.93% slower
+    6 618 ops/s, ±0.14%   | fastest
 
   @khaf/qrcode svg:
-    2 850 ops/s, ±0.67%   | 5% slower
+    2 785 ops/s, ±1.46%   | slowest, 57.92% slower
 
   @khaf/qrcode unicode:
-    3 000 ops/s, ±0.48%   | fastest
+    2 919 ops/s, ±2.76%   | 55.89% slower
 
 Finished 3 cases!
-  Fastest: @khaf/qrcode unicode
-  Slowest: @khaf/qrcode image
+  Fastest: @khaf/qrcode image
+  Slowest: @khaf/qrcode svg
 ```
 
 *Note*: If you only need the raw data, use [magic-qr-code](https://www.npmjs.com/package/magic-qr-code) instead.

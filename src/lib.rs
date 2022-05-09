@@ -5,7 +5,7 @@ extern crate napi_derive;
 
 use napi::{Error, bindgen_prelude::Uint8ClampedArray};
 use qrcode::{QrCode, render::{svg, unicode}};
-use image::{Luma, DynamicImage, ImageFormat};
+use qrcode_png::{QrCode as QrCode2, QrCodeEcc, Color};
 
 #[napi(object)]
 pub struct SvgOptions {
@@ -17,28 +17,24 @@ pub struct SvgOptions {
 
 #[napi]
 pub fn qrcode_image(text: String) -> Result<Uint8ClampedArray, Error> {
-  if text.len() == 0 {
-    return Err(Error::from_reason("text length must be greater than 0".to_string()))
+  if text.is_empty() {
+    return Err(Error::from_reason("text length must be greater than 0".to_string()));
   }
 
-  let code = QrCode::new(text)
+  let mut qrcode = QrCode2::new(text, QrCodeEcc::Medium).unwrap();
+
+  qrcode.margin(10);
+  qrcode.zoom(10);
+
+  let buf = qrcode.generate(Color::Bitmap(false, true))
     .expect("unable to create a qrcode");
-
-  let image = code.render::<Luma<u8>>()
-    .quiet_zone(false)
-    .build();
-  let dynamic = DynamicImage::from(DynamicImage::ImageLuma8(image));
-  let mut buffer: Vec<u8> = Vec::new();
   
-  dynamic.write_to(&mut buffer, ImageFormat::Png)
-    .expect("could not write to buffer");
-
-  Ok(Uint8ClampedArray::new(buffer))
+  Ok(Uint8ClampedArray::new(buf))
 }
 
 #[napi]
 pub fn qrcode_svg(text: String, options: Option<SvgOptions>) -> Result<String, Error> {
-  if text.len() == 0 {
+  if text.is_empty() {
     return Err(Error::from_reason("text length must be greater than 0".to_string()));
   }
 
@@ -73,7 +69,7 @@ pub fn qrcode_svg(text: String, options: Option<SvgOptions>) -> Result<String, E
 
 #[napi]
 pub fn qrcode_unicode(text: String) -> Result<String, Error> {
-  if text.len() == 0 {
+  if text.is_empty() {
     return Err(Error::from_reason("text length must be greater than 0".to_string()))
   }
 
