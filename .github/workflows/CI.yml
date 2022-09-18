@@ -194,7 +194,8 @@ jobs:
           prepare: |
             pkg install -y curl node14 python2
             curl -qL https://www.npmjs.com/install.sh | sh
-            sudo npm install -g npm
+            npm install -g npm@8.18.0
+            npm install -g yarn
             curl https://sh.rustup.rs -sSf --output rustup.sh
             sh rustup.sh -y --profile minimal --default-toolchain stable
             export PATH="/usr/local/cargo/bin:$PATH"
@@ -211,11 +212,10 @@ jobs:
             whoami
             env
             freebsd-version
-            sudo npm install --unsafe-perm --ignore-scripts --fetch-timeout 300000
-            sudo chmod -R 777 ./
-            npm run build
+            yarn install --ignore-scripts --frozen-lockfile --registry https://registry.npmjs.org --network-timeout 300000
+            yarn build
             strip -x *.node
-            npm run test
+            yarn test
             rm -rf node_modules
             rm -rf target
       - name: Upload artifact
