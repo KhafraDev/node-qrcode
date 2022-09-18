@@ -14,15 +14,19 @@ pub fn qrcode_image(text: String) -> Result<Uint8ClampedArray, Error> {
     return Err(Error::from_reason("text length must be greater than 0".to_string()));
   }
 
-  let mut qrcode = QrCode2::new(text, QrCodeEcc::Medium)
-    .expect("unable to create a qrcode");
+  let mut qrcode = match QrCode2::new(text, QrCodeEcc::Medium) {
+    Ok(v) => v,
+    Err(err) => return Err(Error::from_reason(err.to_string()))
+  };
 
   qrcode.margin(10);
   qrcode.zoom(10);
 
-  let buf = qrcode.generate(Color::Bitmap(false, true))
-    .expect("unable to create a qrcode");
-  
+  let buf = match qrcode.generate(Color::Bitmap(false, true)) {
+    Ok(v) => v,
+    Err(err) => return Err(Error::from_reason(err.to_string()))
+  };
+
   Ok(Uint8ClampedArray::new(buf))
 }
 
@@ -32,8 +36,10 @@ pub fn qrcode_unicode(text: String) -> Result<String, Error> {
     return Err(Error::from_reason("text length must be greater than 0".to_string()));
   }
 
-  let qr = QrCode3::encode_text(&text,QrCodeEcc2::Medium)
-    .expect("unable to create a qrcode");
+  let qr = match QrCode3::encode_text(&text, QrCodeEcc2::Medium) {
+    Ok(v) => v,
+    Err(err) => return Err(Error::from_reason(err.to_string()))
+  };
 
   let mut result = String::new();
 
@@ -58,8 +64,10 @@ pub fn qrcode_svg(text: String) -> Result<String, Error> {
     return Err(Error::from_reason("text length must be greater than 0".to_string()));
   }
 
-  let qr = QrCode3::encode_text(&text,QrCodeEcc2::Medium)
-    .expect("unable to create a qrcode");
+  let qr = match QrCode3::encode_text(&text,QrCodeEcc2::Medium) {
+    Ok(v) => v,
+    Err(err) => return Err(Error::from_reason(err.to_string()))
+  };
 	let mut result = String::new();
   let dimension = qr.size();
 
