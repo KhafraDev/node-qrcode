@@ -211,7 +211,8 @@ jobs:
             whoami
             env
             freebsd-version
-            npm install --unsafe-perm --ignore-scripts --fetch-timeout 300000
+            sudo su -
+            sudo npm install --unsafe-perm --ignore-scripts --fetch-timeout 300000
             npm run build
             strip -x *.node
             npm run test
