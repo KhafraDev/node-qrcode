@@ -13,7 +13,7 @@ const invalidTypes = [
 ]
 
 test('qrcodeSvg', (t) => {
-  t.is(
+  t.deepEqual(
     qrcodeSvg('hello world'),
     qrcodeSvg('hello world')
   )

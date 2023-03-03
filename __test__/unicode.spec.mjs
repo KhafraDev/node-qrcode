@@ -20,7 +20,7 @@ const invalidTypes = [
 test('qrcodeUnicode', (t) => {
 	const qr = qrcodeUnicode('hello world')
 
-	t.assert(typeof qr === 'string')
+	t.assert(qr instanceof Uint8ClampedArray)
 	
 	// t.is(qr, readFileSync(join(fixtures, 'unicode.txt'), 'utf8'))
 })
