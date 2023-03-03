@@ -22,7 +22,7 @@ writeFileSync('./qrcode.png', qrcodeImage('text here'))
 ```js
 import { qrcodeSvg } from '@khaf/qrcode'
 
-const svg = qrcodeSvg('text here')
+const svg = new TextDecoder().decode(qrcodeSvg('text here'))
 // do something with svg
 ```
 
@@ -31,10 +31,25 @@ const svg = qrcodeSvg('text here')
 ```js
 import { qrcodeUnicode } from '@khaf/qrcode'
 
-console.log(qrcodeUnicode('text here'))
+console.log(new TextDecoder().decode(qrcodeUnicode('text here')))
 ```
 
+# Async Generation
 
+To prevent the event loop from being blocked, this package also implements async versions for svg, unicode, and png generation.
+
+```mjs
+import { QrCode } from '@khaf/qrcode'
+
+const qr = new QrCode('https://www.google.com')
+
+await qr.asyncImage() // png
+
+new TextDecoder().decode(await qr.asyncSvg()) // svg
+
+new TextDecoder().decode(await qr.asyncUnicode()) // unicode
+
+```
 
 
 # Benchmarks

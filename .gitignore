@@ -8,6 +8,7 @@ build/LICENSE
 napi/LICENSE
 napi-derive/LICENSE
 sys/LICENSE
+.idea
 
 # Created by https://www.gitignore.io/api/node
 # Edit at https://www.gitignore.io/?templates=node
